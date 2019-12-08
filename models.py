@@ -12,7 +12,7 @@ else:
 	DATABASE = SqliteDatabase('issues.sqlite')
 
 
-class User(UserMixin, Model): #User must come before Favorite or you get a "NameError: name 'User' is not defined"
+class User(UserMixin, Model): #User must come before FavoriteTeam or you get a "NameError: name 'User' is not defined"
 	screen_name = CharField()
 	email = CharField(unique=True)
 	password_hash = CharField()
@@ -25,6 +25,14 @@ class User(UserMixin, Model): #User must come before Favorite or you get a "Name
 
 	class Meta:
 		db_table = 'users'
+		database = DATABASE
+
+
+class Team(Model): #Team must come before Favorite Team or you get a "NameError: name 'Team' is not defined"
+	name = CharField()
+	
+	class Meta:
+		db_table = 'teams'
 		database = DATABASE
 
 
@@ -41,17 +49,8 @@ class FavoriteTeam(Model):
 		database = DATABASE
 
 
-class Team(Model):
-	name = CharField()
-	
-	class Meta:
-		db_table = 'teams'
-		database = DATABASE
-
-
-
 def initialize():
 	DATABASE.connect()
-	DATABASE.create_tables([Issue, User, Comment], safe=True) 
+	DATABASE.create_tables([User, Team, FavoriteTeam], safe=True) 
 	print("TABLES CREATED")
 	DATABASE.close()
