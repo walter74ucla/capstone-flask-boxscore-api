@@ -49,7 +49,7 @@ def get_all_favorite_teams():
 
 # Create/New Route (post)
 # @login_required <- look this up to save writing some code https://flask-login.readthedocs.io/en/latest/#flask_login.login_required
-@issue.route('/', methods=["POST"])
+@favorite_team.route('/', methods=["POST"])
 def create_issues():
     ## see request payload anagolous to req.body in express
     payload = request.get_json() # flask gives us a request object (similar to req.body)
