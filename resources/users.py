@@ -29,7 +29,6 @@ def register():
     except models.DoesNotExist:  
         payload['password_hash'] = generate_password_hash(payload['password_hash']) # Hash user's password
         new_user = models.User.create(**payload)
-        # profile = models.Profile.create(user=new_user)
 
         # Start a new session with the new user
         login_user(new_user)
