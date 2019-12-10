@@ -54,8 +54,8 @@ def login():
         user = models.User.get(models.User.email ** payload['email'])
         user_dict = model_to_dict(user)
         # check_password_hash(<hash_password>, <plaintext_pw_to_compare>)
-        if (check_password_hash(user_dict['password'], payload['password'])):
-            del user_dict['password']
+        if (check_password_hash(user_dict['password_hash'], payload['password_hash'])):
+            del user_dict['password_hash']
             login_user(user) # Setup for the session
             print('User is:', user)
             return jsonify(data=user_dict, status={'code': 200, 'message': 'User authenticated'})
