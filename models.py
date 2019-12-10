@@ -13,7 +13,7 @@ else:
 
 
 class User(UserMixin, Model): #User must come before FavoriteTeam or you get a "NameError: name 'User' is not defined"
-	screen_name = CharField()
+	screen_name = CharField(max_length=10)
 	email = CharField(unique=True)
 	password_hash = CharField()
 
