@@ -28,12 +28,13 @@ class User(UserMixin, Model): #User must come before FavoriteTeam or you get a "
 		database = DATABASE
 
 
-class Team(Model): #Team must come before Favorite Team or you get a "NameError: name 'Team' is not defined"
-	name = CharField()
+# not using the Many-to-Many relationship any more
+# class Team(Model): #Team must come before Favorite Team or you get a "NameError: name 'Team' is not defined"
+# 	name = CharField()
 	
-	class Meta:
-		db_table = 'teams'
-		database = DATABASE
+# 	class Meta:
+# 		db_table = 'teams'
+# 		database = DATABASE
 
 
 class FavoriteTeam(Model):
@@ -41,8 +42,9 @@ class FavoriteTeam(Model):
 	created_at = DateTimeField(default= datetime.date.today())
 	# added created_by to relate a favorite team to the person creating the favorite team
 	created_by = ForeignKeyField(User, backref='favoriteTeams')# Represents One-to-Many
-	user = ForeignKeyField(User)#setting up Many-to-Many relationship
-	team = ForeignKeyField(Team)#setting up Many-to-Many relationship
+	#not using the Many-to-Many relationship any more
+	#user = ForeignKeyField(User)#setting up Many-to-Many relationship
+	#team = ForeignKeyField(Team)#setting up Many-to-Many relationship
 
 	class Meta:
 		db_table = 'favoriteTeams'
@@ -51,6 +53,6 @@ class FavoriteTeam(Model):
 
 def initialize():
 	DATABASE.connect()
-	DATABASE.create_tables([User, Team, FavoriteTeam], safe=True) 
+	DATABASE.create_tables([User, FavoriteTeam], safe=True) 
 	print("TABLES CREATED")
 	DATABASE.close()

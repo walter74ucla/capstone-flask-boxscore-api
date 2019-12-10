@@ -1,3 +1,4 @@
+import os ##new for heroku
 from flask import Flask, g
 from flask_cors import CORS
 from flask_login import LoginManager
@@ -13,6 +14,20 @@ PORT = 8000
 # Initialize an instance of the Flask class.
 # This starts the website!
 app = Flask(__name__)
+
+app.secret_key = "WEFGLBEQWFGJHIITWROSJOWWWW" ##Need this to encode the session
+login_manager = LoginManager()#sets up the ability to set up the session
+login_manager.init_app(app)
+
+#Decorator that will load the user object whenever we access the session
+# by import current_user from flask_login
+@login_manager.user_loader 
+def load_user(user_id):
+    try:
+        return models.User.get(models.User.id == user_id)
+    except models.DoesNotExist:
+        return None
+
 
 @app.before_request
 def before_request():
