@@ -17,7 +17,7 @@ def register():
     # This has all the data
     payload = request.get_json()
 
-    if not payload['email'] or not payload['password']:
+    if not payload['email'] or not payload['password_hash']:
         return jsonify(status=400)
     # Make sure we handle:
     #  - Username/email has not been used before
@@ -27,9 +27,8 @@ def register():
         models.User.get(models.User.email ** payload['email']) 
         return jsonify(data={}, status={'code': 400, 'message': 'A user with that email already exists.'}) 
     except models.DoesNotExist:  
-        payload['password'] = generate_password_hash(payload['password']) # Hash user's password
+        payload['password_hash'] = generate_password_hash(payload['password_hash']) # Hash user's password
         new_user = models.User.create(**payload)
-        # profile = models.Profile.create(user=new_user)
 
         # Start a new session with the new user
         login_user(new_user)
@@ -38,7 +37,7 @@ def register():
         print(type(user_dict))
 
         # delete the password before sending user dict back to the client/browser
-        del user_dict['password']
+        del user_dict['password_hash']
         return jsonify(data=user_dict, status={'code': 201, 'message': 'User created'})
 
 @user.route('/login', methods=["POST"])
@@ -55,8 +54,8 @@ def login():
         user = models.User.get(models.User.email ** payload['email'])
         user_dict = model_to_dict(user)
         # check_password_hash(<hash_password>, <plaintext_pw_to_compare>)
-        if (check_password_hash(user_dict['password'], payload['password'])):
-            del user_dict['password']
+        if (check_password_hash(user_dict['password_hash'], payload['password_hash'])):
+            del user_dict['password_hash']
             login_user(user) # Setup for the session
             print('User is:', user)
             return jsonify(data=user_dict, status={'code': 200, 'message': 'User authenticated'})

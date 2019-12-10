@@ -11,4 +11,13 @@ $ pip3 freeze > requirements.txt
 create the .gitignore file as necessary
 https://github.com/pallets/flask/blob/master/.gitignore
 ===============================================================================
-
+Steps for flask deployment
+$ pip3 freeze > requirements.txt
+$ pip3 install -r requirements.txt
+$ touch Procfile
+$ pip3 install gunicorn
+$ pip3 freeze > requirements.txt
+add web: gunicorn app:app to your Procfile
+$ heroku config:set ON_HEROKU=1 -a flask-boxscore-api <--this is the app name 													created via the heroku website
+$ heroku git:remote -a flask-boxscore-api
+add the corresponding react app address in the CORS in app.py
