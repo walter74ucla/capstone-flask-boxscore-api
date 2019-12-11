@@ -10,6 +10,7 @@ $ pip3 freeze > requirements.txt
 
 create the .gitignore file as necessary
 https://github.com/pallets/flask/blob/master/.gitignore
+add *.sqlite to .gitignore
 ===============================================================================
 Steps for flask deployment
 $ pip3 freeze > requirements.txt

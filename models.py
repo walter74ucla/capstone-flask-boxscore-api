@@ -9,7 +9,7 @@ if 'ON_HEROKU' in os.environ:
     DATABASE = connect(os.environ.get('DATABASE_URL')) 
 
 else:
-	DATABASE = SqliteDatabase('issues.sqlite')
+	DATABASE = SqliteDatabase('boxscores.sqlite')
 
 
 class User(UserMixin, Model): #User must come before FavoriteTeam or you get a "NameError: name 'User' is not defined"
@@ -39,6 +39,7 @@ class User(UserMixin, Model): #User must come before FavoriteTeam or you get a "
 
 class FavoriteTeam(Model):
 	name = CharField()
+	# favoriteTeam = CharField() #naming convention matches the react property
 	created_at = DateTimeField(default= datetime.date.today())
 	# added created_by to relate a favorite team to the person creating the favorite team
 	created_by = ForeignKeyField(User, backref='favoriteTeams')# Represents One-to-Many
