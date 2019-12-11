@@ -30,7 +30,10 @@ def get_all_favorite_teams():
     # all_favorite_teams = [model_to_dict(d, max_depth=0) for d in models.FavoriteTeam.select()]
 
     # I want the entire object, so I am not going to use max_depth=0
-    all_favorite_teams = [model_to_dict(favorite_team) for favorite_team in models.FavoriteTeam.select()]
+    all_favorite_teams = [model_to_dict(favorite_team)
+                            for favorite_team 
+                            in models.FavoriteTeam.select().where((models.FavoriteTeam.created_by_id == current_user.id))]
+                            
 
     print(all_favorite_teams, 'line 31', '\n')
     return jsonify(data=all_favorite_teams, status={'code': 200, 'message': 'Success'})
@@ -50,7 +53,7 @@ def get_all_favorite_teams():
 # Create/New Route (post)
 # @login_required <- look this up to save writing some code https://flask-login.readthedocs.io/en/latest/#flask_login.login_required
 @favorite_team.route('/', methods=["POST"])
-def create_favorite_teams():
+def create_favorite_team():
     ## see request payload anagolous to req.body in express
     payload = request.get_json() # flask gives us a request object (similar to req.body)
     print(type(payload), 'payload')
@@ -180,10 +183,10 @@ def update_favorite_team(id):
 
 # Delete Route (delete)
 @favorite_team.route('/<name>/', methods=["DELETE"])
-def delete_issue(name):
-    # Get the issue we are trying to delete. Could put in try -> except because
+def delete_favorite_team(name):
+    # Get the team we are trying to delete. Could put in try -> except because
     # if we try to get an id that doesn't exist a 500 error will occur. Would 
-    # send back a 404 error because the 'issue' resource wasn't found.
+    # send back a 404 error because the 'team' resource wasn't found.
 
     if not current_user.is_authenticated: # Checks if user is logged in
         return jsonify(data={}, status={'code': 401, 'message': 'You must be logged in to create a Favorite Team'})
