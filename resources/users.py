@@ -71,3 +71,44 @@ def logout():
     """ Log user out """
     logout_user()
     return jsonify(data={}, status={'code': 204, 'message': 'User logged out'})
+
+@user.route('/<id>/', methods=["PUT"])
+def update_screen_name(id):
+    # print('hi')
+    # pdb.set_trace()
+    payload = request.get_json()
+    print(payload)
+
+    # Get the screen name we are trying to update. Could put in try -> except because
+    # if we try to get an id that doesn't exist a 500 error will occur. Would 
+    # send back a 404 error because the 'issue' resource wasn't found.
+    screen_name_to_update = models.User.get(id=id)
+    print(screen_name_to_update, "line134")
+    if not current_user.is_authenticated: # Checks if user is logged in
+        return jsonify(data={}, status={'code': 401, 'message': 'You must be logged in to update your screen name'})
+
+    if screen_name_to_update.created_by.id is not current_user.id: 
+        # Checks if create_by (User) of screen name has the same id as the logged in User.
+        # If the ids don't match send 401 - unauthorized back to user
+        return jsonify(data={}, status={'code': 401, 'message': 'You can only update a screen name you created'})
+
+
+    # Given our form, we only want to update the screen name of our user
+    # screen_name_to_update.update(
+    #     subject=payload['screen_name']
+    # ).where(models.User.id==id).execute()
+
+    #new code
+    screen_name_to_update.screen_name = payload['screen_name']
+    screen_name_to_update.save()
+
+    # Get a dictionary of the updated screen_name to send back to the client.
+    # Use max_depth=0 because we want just the created_by id and not the entire
+    # created_by object sent back to the client. 
+    # update_issue_dict = model_to_dict(screen_name_to_update, max_depth=0)
+
+    # we want the entire object, so we are not going to use max_depth=0
+    update_screen_name_dict = model_to_dict(screen_name_to_update)
+    return jsonify(status={'code': 200, 'msg': 'success'}, data=update_screen_name_dict)    
+
+    
