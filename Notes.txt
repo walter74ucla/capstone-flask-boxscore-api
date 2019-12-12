@@ -12,7 +12,7 @@ create the .gitignore file as necessary
 https://github.com/pallets/flask/blob/master/.gitignore
 add *.sqlite to .gitignore
 ===============================================================================
-Steps for flask deployment
+Steps for flask deployment on heroku
 $ pip3 freeze > requirements.txt
 $ pip3 install -r requirements.txt
 $ touch Procfile
@@ -22,3 +22,18 @@ add web: gunicorn app:app to your Procfile
 $ heroku config:set ON_HEROKU=1 -a flask-boxscore-api <--this is the app name 													created via the heroku website
 $ heroku git:remote -a flask-boxscore-api
 add the corresponding react app address in the CORS in app.py
+
+$ git remote -v
+you should see long githhub repo lines (fetch) and (push)
+
+in heroku, add Heroku Postgres from the Resources link
+
+$ ls .git
+this is a check to make sure it works.
+something like No such file or directory is bad
+
+$ git add .
+$ git commit -m "prepared for heroku"
+$ git push heroku master
+$ heroku open
+$ heroku logs to see errors
