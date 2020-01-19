@@ -72,6 +72,26 @@ def logout():
     logout_user()
     return jsonify(data={}, status={'code': 204, 'message': 'User logged out'})
 
+# Show/Read Route (get)
+@user.route('/<id>/', methods=["GET"]) # <id> is the params (:id in express)
+def get_one_user(id):
+    print(id)
+    # Get the user we are trying to update. Could put in try -> except because
+    # if we try to get an id that doesn't exist a 500 error will occur. Would 
+    # send back a 404 error because the 'dog' resource wasn't found.
+    one_user = models.User.get(id=id)
+
+    if not current_user.is_authenticated: # Checks if user is logged in
+        return jsonify(data={}, status={'code': 401, 'message': 'You must be logged in to edit a screen name'})
+
+    # if one_issue.created_by.id is not current_user.id: 
+        # Checks if created_by (User) of issue has the same id as the logged in User.
+        # If the ids don't match send 401 - unauthorized back to user
+        # return jsonify(data={}, status={'code': 401, 'message': 'You can only update an issue you created'})
+
+    return jsonify(data=model_to_dict(one_user), status={'code': 200, 'message': 'You can update a screen name you created'})      
+
+# Update/Edit Route (put)
 @user.route('/<id>/', methods=["PUT"])
 def update_screen_name(id):
     # print('hi')
@@ -83,14 +103,14 @@ def update_screen_name(id):
     # if we try to get an id that doesn't exist a 500 error will occur. Would 
     # send back a 404 error because the 'issue' resource wasn't found.
     screen_name_to_update = models.User.get(id=id)
-    print(screen_name_to_update, "line134")
+    print(screen_name_to_update, "line106")
     if not current_user.is_authenticated: # Checks if user is logged in
         return jsonify(data={}, status={'code': 401, 'message': 'You must be logged in to update your screen name'})
 
-    if screen_name_to_update.created_by.id is not current_user.id: 
+    # if screen_name_to_update.created_by.id is not current_user.id: 
         # Checks if create_by (User) of screen name has the same id as the logged in User.
         # If the ids don't match send 401 - unauthorized back to user
-        return jsonify(data={}, status={'code': 401, 'message': 'You can only update a screen name you created'})
+        # return jsonify(data={}, status={'code': 401, 'message': 'You can only update a screen name you created'})
 
 
     # Given our form, we only want to update the screen name of our user
