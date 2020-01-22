@@ -49,12 +49,20 @@ def index():
     return 'hi'
 
 
-                                #do not forget to add the react heroku url link here
-CORS(favorite_team, origins=['http://localhost:3000', 'https://react-boxscore-app.herokuapp.com'], supports_credentials=True)
+                                
+CORS(#do not forget to add the react heroku url link here
+        favorite_team, 
+        origins=['http://localhost:3000', 'https://react-boxscore-app.herokuapp.com'], 
+        supports_credentials=True
+    )
 app.register_blueprint(favorite_team, url_prefix='/api/v1/favorite_teams')
 
-                                #do not forget to add the react heroku url link here
-CORS(user, origins=['http://localhost:3000', 'https://react-boxscore-app.herokuapp.com'], supports_credentials=True)
+                                
+CORS(#do not forget to add the react heroku url link here
+        user, 
+        origins=['http://localhost:3000', 'https://react-boxscore-app.herokuapp.com'], 
+        supports_credentials=True
+    )
 app.register_blueprint(user, url_prefix='/api/v1/users')
 
 

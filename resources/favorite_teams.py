@@ -90,8 +90,8 @@ def get_one_favorite_team(id):
                 )#should never happen in this app, since the user should be selecting favorite teams based on a pre-defined list
 
     return jsonify(
-                data=model_to_dict(one_issue), 
-                status={'code': 200, 'message': 'You can update an issue you created'}
+                data=model_to_dict(one_favorite_team), 
+                status={'code': 200, 'message': 'You can update an Favorite Team you created'}
             )#should never happen in this app, since the user should be selecting favorite teams based on a pre-defined list
 
 # Update/Edit Route (put)
