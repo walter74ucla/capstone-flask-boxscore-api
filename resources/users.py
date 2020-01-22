@@ -72,28 +72,45 @@ def logout():
     logout_user()
     return jsonify(data={}, status={'code': 204, 'message': 'User logged out'})
 
+# Index Route (get)
+@user.route('/', methods=["GET"]) # GET is the default method
+def get_all_users():
+    # print(vars(request))
+    # print(request.cookies)
+    ## find the users and change each one to a dictionary into a new array
+    
+    print('Current User:',  current_user, "line 82", '\n')
+    # Send all users back to client. There is no valid reason for this not to work
+    # so we don't use a try -> except.
+    
+    all_users = [model_to_dict(user) for user in models.User.select()]
+
+    print(all_users, 'line 88', '\n')
+    return jsonify(data=all_users, status={'code': 200, 'message': 'Success'})
+
 # Show/Read Route (get)
 @user.route('/<id>/', methods=["GET"]) # <id> is the params (:id in express)
 def get_one_user(id):
     print(id)
     # Get the user we are trying to update. Could put in try -> except because
     # if we try to get an id that doesn't exist a 500 error will occur. Would 
-    # send back a 404 error because the 'dog' resource wasn't found.
+    # send back a 404 error because the 'user' resource wasn't found.
     one_user = models.User.get(id=id)
 
     if not current_user.is_authenticated: # Checks if user is logged in
-        return jsonify(data={}, status={'code': 401, 'message': 'You must be logged in to edit a screen name'})
+        return jsonify(
+                    data={}, 
+                    status={'code': 401, 'message': 'You must be logged in to edit a screen name'}
+                )
 
-    # if one_issue.created_by.id is not current_user.id: 
-        # Checks if created_by (User) of issue has the same id as the logged in User.
-        # If the ids don't match send 401 - unauthorized back to user
-        # return jsonify(data={}, status={'code': 401, 'message': 'You can only update an issue you created'})
-
-    return jsonify(data=model_to_dict(one_user), status={'code': 200, 'message': 'You can update a screen name you created'})      
+    return jsonify(
+                data=model_to_dict(one_user), 
+                status={'code': 200, 'message': 'You can update a screen name you created'}
+            )      
 
 # Update/Edit Route (put)
 @user.route('/<id>/', methods=["PUT"])
-def update_screen_name(id):
+def update_user(id):
     # print('hi')
     # pdb.set_trace()
     payload = request.get_json()
@@ -101,34 +118,26 @@ def update_screen_name(id):
 
     # Get the screen name we are trying to update. Could put in try -> except because
     # if we try to get an id that doesn't exist a 500 error will occur. Would 
-    # send back a 404 error because the 'issue' resource wasn't found.
-    screen_name_to_update = models.User.get(id=id)
-    print(screen_name_to_update, "line106")
+    # send back a 404 error because the 'user' resource wasn't found.
+    user_to_update = models.User.get(id=id)
+    print(user_to_update, 'line123', '\n')
     if not current_user.is_authenticated: # Checks if user is logged in
-        return jsonify(data={}, status={'code': 401, 'message': 'You must be logged in to update your screen name'})
-
-    # if screen_name_to_update.created_by.id is not current_user.id: 
-        # Checks if create_by (User) of screen name has the same id as the logged in User.
-        # If the ids don't match send 401 - unauthorized back to user
-        # return jsonify(data={}, status={'code': 401, 'message': 'You can only update a screen name you created'})
-
+        return jsonify(
+                    data={}, 
+                    status={'code': 401, 'message': 'You must be logged in to update your screen name'}
+                )
 
     # Given our form, we only want to update the screen name of our user
-    # screen_name_to_update.update(
+    # user_to_update.update(
     #     subject=payload['screen_name']
     # ).where(models.User.id==id).execute()
 
     #new code
-    screen_name_to_update.screen_name = payload['screen_name']
-    screen_name_to_update.save()
+    user_to_update.screen_name = payload['screen_name']
+    user_to_update.save()
 
-    # Get a dictionary of the updated screen_name to send back to the client.
-    # Use max_depth=0 because we want just the created_by id and not the entire
-    # created_by object sent back to the client. 
-    # update_issue_dict = model_to_dict(screen_name_to_update, max_depth=0)
-
-    # we want the entire object, so we are not going to use max_depth=0
-    update_screen_name_dict = model_to_dict(screen_name_to_update)
-    return jsonify(status={'code': 200, 'msg': 'success'}, data=update_screen_name_dict)    
+    # Get a dictionary of the updated user to send back to the client.
+    update_user_dict = model_to_dict(user_to_update)
+    return jsonify(status={'code': 200, 'msg': 'success'}, data=update_user_dict)    
 
     
